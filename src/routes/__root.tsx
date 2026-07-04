@@ -10,7 +10,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -39,7 +38,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    // Error reporting: preserve console logging. Replaceable with Sentry or other service.
+    // reportLovableError was removed.
   }, [error]);
 
   return (
@@ -80,16 +80,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "SOSLY" },
       { name: "description", content: "Safe Haven Now offers a discreet safety device and 24/7 active support for women's personal security." },
-      { name: "author", content: "Lovable" },
+      { name: "author", content: "SOSLY" },
       { property: "og:title", content: "SOSLY" },
       { property: "og:description", content: "Safe Haven Now offers a discreet safety device and 24/7 active support for women's personal security." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@SOSLY" },
       { name: "twitter:title", content: "SOSLY" },
       { name: "twitter:description", content: "Safe Haven Now offers a discreet safety device and 24/7 active support for women's personal security." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/79eb19e0-7ef8-41cc-aa34-ec4eb0f118ab/id-preview-d8aee574--7cf08851-c817-48c2-bf14-20660a658523.lovable.app-1782028589412.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/79eb19e0-7ef8-41cc-aa34-ec4eb0f118ab/id-preview-d8aee574--7cf08851-c817-48c2-bf14-20660a658523.lovable.app-1782028589412.png" },
+      
     ],
     links: [
       {
