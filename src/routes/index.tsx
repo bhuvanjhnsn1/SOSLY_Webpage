@@ -75,12 +75,8 @@ function Reveal({
   }, []);
 
   return (
-    <Tag
-      ref={ref as never}
-      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
+    <Tag ref={ref as never} className={`reveal ${visible ? "is-visible" : ""}`} style={{ ['--reveal-delay' as any]: `${delay}ms` }}>
+      <div className={className}>{children}</div>
     </Tag>
   );
 }
@@ -145,13 +141,13 @@ function Hero() {
           >
             <a
               href="#waitlist"
-              className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-base font-medium text-navy-foreground transition hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-base font-medium text-navy-foreground btn-subtle"
             >
               Get early access <ArrowRight className="h-4 w-4" />
             </a>
             <a
               href="#how"
-              className="inline-flex items-center gap-2 rounded-full border border-navy/20 bg-white/50 px-6 py-3.5 text-base font-medium text-navy transition hover:bg-white"
+              className="inline-flex items-center gap-2 rounded-full border border-navy/20 bg-white/50 px-6 py-3.5 text-base font-medium text-navy btn-subtle btn-subtle--ghost"
             >
               See how it works
             </a>
@@ -288,7 +284,11 @@ function HowItWorks() {
         </Reveal>
         <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
           {steps.map(({ n, i: Icon, t, d }, idx) => (
-            <Reveal key={n} delay={idx * 120} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-8 transition hover:bg-white/[0.07]">
+            <Reveal
+              key={n}
+              delay={idx * 120}
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-8 subtle-pop hover:bg-white/[0.07]"
+            >
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold tracking-widest text-pink">{n}</span>
                 <Icon className="h-6 w-6 text-pink" />
@@ -346,7 +346,7 @@ function LaunchBanner() {
   return (
     <section className="bg-pink">
       <div className="mx-auto max-w-7xl px-6 py-10">
-        <Reveal className="flex flex-col items-center justify-between gap-4 rounded-3xl border border-navy/15 bg-background px-6 py-5 text-center md:flex-row md:text-left">
+        <Reveal className="flex flex-col items-center justify-between gap-4 rounded-3xl border border-navy/15 bg-background px-6 py-5 text-center md:flex-row md:text-left subtle-pop">
           <div className="flex items-center gap-3">
             <span className="flex h-2.5 w-2.5 items-center justify-center">
               <span className="absolute h-2.5 w-2.5 animate-ping rounded-full bg-navy/40" />
@@ -361,7 +361,7 @@ function LaunchBanner() {
           </p>
           <a
             href="#waitlist"
-            className="inline-flex items-center gap-1.5 rounded-full bg-navy px-5 py-2.5 text-sm font-medium text-navy-foreground transition hover:opacity-90"
+            className="inline-flex items-center gap-1.5 rounded-full bg-navy px-5 py-2.5 text-sm font-medium text-navy-foreground btn-subtle"
           >
             Reserve my spot <ArrowRight className="h-3.5 w-3.5" />
           </a>
@@ -423,7 +423,7 @@ function Waitlist() {
           Be the first to know when SOSLY ships. Updates on the device, the
           service, and early-member access — straight to your inbox.
         </p>
-        <form
+          <form
           onSubmit={handleSubmit}
           className="mx-auto mt-10 flex max-w-md flex-col gap-3 sm:flex-row"
         >
@@ -440,7 +440,7 @@ function Waitlist() {
           <button
             type="submit"
             disabled={loading || submitted}
-            className="inline-flex h-12 items-center justify-center gap-1.5 rounded-full bg-pink px-6 text-sm font-semibold text-navy transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-80"
+            className="inline-flex h-12 items-center justify-center gap-1.5 rounded-full bg-pink px-6 text-sm font-semibold text-navy btn-subtle disabled:cursor-not-allowed disabled:opacity-80"
           >
             {submitted ? "You're on the list" : loading ? "Signing up…" : "Sign me up"}
             {!submitted && !loading && <ArrowRight className="h-4 w-4" />}
