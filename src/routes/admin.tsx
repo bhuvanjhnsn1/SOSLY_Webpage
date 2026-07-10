@@ -38,13 +38,13 @@ function Admin() {
       setLoadingAuth(false);
     });
 
-    const { subscription } = supabase.auth.onAuthStateChange((_, s) => {
-      setSession((s as any)?.session ?? null);
+    const { data: authListener } = supabase.auth.onAuthStateChange((_, nextSession) => {
+      setSession(nextSession ?? null);
     });
 
     return () => {
       mounted = false;
-      subscription?.unsubscribe?.();
+      authListener.subscription.unsubscribe();
     };
   }, []);
 
@@ -58,6 +58,7 @@ function Admin() {
       toast.error(signError.message || 'Sign in failed');
     } else {
       toast.success('Signed in');
+      await fetchSignups();
     }
   }
 
