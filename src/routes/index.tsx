@@ -75,8 +75,12 @@ function Reveal({
   }, []);
 
   return (
-    <Tag ref={ref as never} className={`reveal ${visible ? "is-visible" : ""}`} style={{ ['--reveal-delay' as any]: `${delay}ms` }}>
-      <div className={className}>{children}</div>
+    <Tag
+      ref={ref as never}
+      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
+      style={{ ['--reveal-delay' as any]: `${delay}ms` }}
+    >
+      {children}
     </Tag>
   );
 }
