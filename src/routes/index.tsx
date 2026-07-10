@@ -288,17 +288,15 @@ function HowItWorks() {
         </Reveal>
         <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
           {steps.map(({ n, i: Icon, t, d }, idx) => (
-            <Reveal
-              key={n}
-              delay={idx * 120}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-8 subtle-pop hover:bg-white/[0.07]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold tracking-widest text-pink">{n}</span>
-                <Icon className="h-6 w-6 text-pink" />
+            <Reveal key={n} delay={idx * 120} className="h-full">
+              <div className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-8 subtle-pop hover:bg-white/[0.07]">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold tracking-widest text-pink">{n}</span>
+                  <Icon className="h-6 w-6 text-pink" />
+                </div>
+                <h3 className="mt-10 text-2xl font-semibold">{t}</h3>
+                <p className="mt-3 text-navy-foreground/70">{d}</p>
               </div>
-              <h3 className="mt-10 text-2xl font-semibold">{t}</h3>
-              <p className="mt-3 text-navy-foreground/70">{d}</p>
             </Reveal>
           ))}
         </div>
