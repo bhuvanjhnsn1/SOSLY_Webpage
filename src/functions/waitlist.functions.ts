@@ -16,13 +16,15 @@ export default async function handler(request: Request) {
       const { addSignup } = await import('@/server/waitlist.server');
       const body = await request.json().catch(() => ({}));
       const email = body?.email || url.searchParams.get('email');
+      const name = body?.name || url.searchParams.get('name');
       if (!email) return new Response(JSON.stringify({ error: 'email required' }), { status: 400, headers: { 'content-type': 'application/json' } });
+      if (!name) return new Response(JSON.stringify({ error: 'name required' }), { status: 400, headers: { 'content-type': 'application/json' } });
 
       try {
-        const data = await addSignup(email);
+        const data = await addSignup(email, name);
         return new Response(JSON.stringify({ data }), { status: 201, headers: { 'content-type': 'application/json' } });
       } catch (err: any) {
-        const status = err?.code === 'invalid_email' ? 400 : 500;
+        const status = err?.code === 'invalid_email' || err?.code === 'invalid_name' ? 400 : 500;
         return new Response(JSON.stringify({ error: String(err?.message || err) }), { status, headers: { 'content-type': 'application/json' } });
       }
     }

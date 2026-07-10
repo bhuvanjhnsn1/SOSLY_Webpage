@@ -25,7 +25,7 @@ function Admin() {
   const [passwordInput, setPasswordInput] = useState('');
   const [signingIn, setSigningIn] = useState(false);
 
-  const [signups, setSignups] = useState<Array<{ id: string; email: string; created_at: string }>>([]);
+  const [signups, setSignups] = useState<Array<{ id: string; name: string | null; email: string; created_at: string }>>([]);
   const [loadingSignups, setLoadingSignups] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -146,6 +146,7 @@ function Admin() {
         <Table>
           <TableHeader>
             <tr>
+              <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Joined</TableHead>
             </tr>
@@ -153,6 +154,7 @@ function Admin() {
           <TableBody>
             {signups.map((s) => (
               <TableRow key={s.id}>
+                <TableCell>{s.name ?? '—'}</TableCell>
                 <TableCell>{s.email}</TableCell>
                 <TableCell>{new Date(s.created_at).toLocaleString()}</TableCell>
               </TableRow>

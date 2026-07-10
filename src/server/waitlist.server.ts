@@ -6,14 +6,21 @@ export async function listWaitlist() {
   return data;
 }
 
-export async function addSignup(email: string) {
+export async function addSignup(email: string, name: string) {
   const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
 
   // basic email validation
   const emailNormalized = String(email || '').trim().toLowerCase();
+  const nameNormalized = String(name || '').trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNormalized)) {
     const err: any = new Error('Invalid email');
     err.code = 'invalid_email';
+    throw err;
+  }
+
+  if (!nameNormalized) {
+    const err: any = new Error('Invalid name');
+    err.code = 'invalid_name';
     throw err;
   }
 
@@ -31,37 +38,45 @@ export async function addSignup(email: string) {
 
   const { data, error } = await supabaseAdmin
     .from('waitlist_signups')
-    .insert([{ id, email: emailNormalized }])
+    .insert([{ id, email: emailNormalized, name: nameNormalized }])
     .select()
     .single();
 
   if (error) throw error;
 
-  // TODO: integrate Resend (transactional email) here in future. Example placeholder:
-  // await sendWelcomeEmailViaResend(emailNormalized);
+  await sendWelcomeEmailViaResend(emailNormalized, nameNormalized);
 
   return data;
 }
 
 // Placeholder for future Resend integration. Implement using RESEND_API_KEY server-side.
-export async function sendWelcomeEmailViaResend(email: string) {
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  if (!RESEND_API_KEY) {
+export async function sendWelcomeEmailViaResend(email: string, name: string) {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.RESEND_FROM_EMAIL;
+  if (!resendApiKey) {
     throw new Error('Missing RESEND_API_KEY');
   }
 
-  // Example POST to Resend - adapt payload per Resend API when integrating.
-  await fetch('https://api.resend.com/emails', {
+  if (!fromEmail) {
+    throw new Error('Missing RESEND_FROM_EMAIL');
+  }
+
+  const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      Authorization: `Bearer ${resendApiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'noreply@yourdomain.com',
+      from: fromEmail,
       to: [email],
-      subject: 'Thanks for joining',
-      html: `<p>Thanks for joining our waitlist — we will be in touch.</p>`,
+      subject: 'You are on the SOSLY waitlist',
+      html: `<p>Thanks for signing up, ${name}. We have saved your spot and will share updates soon.</p>`,
     }),
   });
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    throw new Error(`Resend request failed (${response.status}): ${body}`);
+  }
 }

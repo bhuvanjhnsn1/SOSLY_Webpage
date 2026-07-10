@@ -374,9 +374,16 @@ function LaunchBanner() {
 }
 
 function Waitlist() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const nameSchema = z
+    .string()
+    .trim()
+    .min(1, "Please enter your name")
+    .max(100, "Name is too long");
 
   const emailSchema = z
     .string()
@@ -388,16 +395,25 @@ function Waitlist() {
     e.preventDefault();
     if (loading || submitted) return;
 
-    const parsed = emailSchema.safeParse(email);
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0]?.message ?? "Invalid email");
+    const parsedName = nameSchema.safeParse(name);
+    if (!parsedName.success) {
+      toast.error(parsedName.error.issues[0]?.message ?? "Invalid name");
+      return;
+    }
+
+    const parsedEmail = emailSchema.safeParse(email);
+    if (!parsedEmail.success) {
+      toast.error(parsedEmail.error.issues[0]?.message ?? "Invalid email");
       return;
     }
 
     setLoading(true);
     const { error } = await supabase
       .from("waitlist_signups")
-      .insert({ email: parsed.data.toLowerCase() });
+      .insert({
+        name: parsedName.data,
+        email: parsedEmail.data.toLowerCase(),
+      });
     setLoading(false);
 
     if (error) {
@@ -425,10 +441,20 @@ function Waitlist() {
           Be the first to know when SOSLY ships. Updates on the device, the
           service, and early-member access — straight to your inbox.
         </p>
-          <form
+        <form
           onSubmit={handleSubmit}
-          className="mx-auto mt-10 flex max-w-md flex-col gap-3 sm:flex-row"
+          className="mx-auto mt-10 grid max-w-lg grid-cols-1 gap-3 sm:grid-cols-2"
         >
+          <input
+            type="text"
+            required
+            maxLength={100}
+            disabled={loading || submitted}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            className="h-12 rounded-full border border-white/15 bg-white/5 px-5 text-sm text-navy-foreground placeholder:text-navy-foreground/40 outline-none transition focus:border-pink focus:bg-white/10 disabled:opacity-60"
+          />
           <input
             type="email"
             required
@@ -437,12 +463,12 @@ function Waitlist() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="h-12 flex-1 rounded-full border border-white/15 bg-white/5 px-5 text-sm text-navy-foreground placeholder:text-navy-foreground/40 outline-none transition focus:border-pink focus:bg-white/10 disabled:opacity-60"
+            className="h-12 rounded-full border border-white/15 bg-white/5 px-5 text-sm text-navy-foreground placeholder:text-navy-foreground/40 outline-none transition focus:border-pink focus:bg-white/10 disabled:opacity-60"
           />
           <button
             type="submit"
             disabled={loading || submitted}
-            className="inline-flex h-12 items-center justify-center gap-1.5 rounded-full bg-pink px-6 text-sm font-semibold text-navy btn-subtle disabled:cursor-not-allowed disabled:opacity-80"
+            className="inline-flex h-12 items-center justify-center gap-1.5 rounded-full bg-pink px-6 text-sm font-semibold text-navy btn-subtle disabled:cursor-not-allowed disabled:opacity-80 sm:col-span-2"
           >
             {submitted ? "You're on the list" : loading ? "Signing up…" : "Sign me up"}
             {!submitted && !loading && <ArrowRight className="h-4 w-4" />}
