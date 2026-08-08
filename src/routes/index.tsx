@@ -239,7 +239,7 @@ function Device() {
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-navy/75">
             Clip it to a bag, wear it on a keychain, slip it in a pocket. A
-            single press silently signals our response team — no apps to open,
+            single press silently signals our response team, so no apps to open,
             no phone to unlock.
           </p>
           <ul className="mt-8 space-y-5">
@@ -323,7 +323,7 @@ function Mission() {
           </p>
           <p>
             SOSLY combines purposeful hardware with a human service that
-            actually shows up. No theatre, no panic — just calm, capable
+            actually shows up. No theatre, no panic, just calm, capable
             backup, on call around the clock.
           </p>
           <div className="grid grid-cols-2 gap-6 pt-4">
@@ -359,7 +359,7 @@ function LaunchBanner() {
             </p>
           </div>
           <p className="text-sm text-navy/70">
-            Be first in line — early members get founding pricing and priority device shipping.
+            Be first in line. Early members get founding pricing and priority device shipping.
           </p>
           <a
             href="#waitlist"
@@ -439,7 +439,7 @@ function Waitlist() {
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-lg text-navy-foreground/75">
           Be the first to know when SOSLY ships. Updates on the device, the
-          service, and early-member access — straight to your inbox.
+          service, and early-member access; straight to your inbox.
         </p>
         <form
           onSubmit={handleSubmit}
