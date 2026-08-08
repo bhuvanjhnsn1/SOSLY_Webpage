@@ -137,7 +137,7 @@ function Hero() {
           >
             Every woman deserves the freedom to go anywhere, at any time, with
             confidence. SOSLY pairs a discreet push-button device with a 24/7
-            human response team — so help is one press away.
+            human response team. So help is one press away.
           </p>
           <div
             className="mt-9 flex flex-wrap items-center gap-3"
